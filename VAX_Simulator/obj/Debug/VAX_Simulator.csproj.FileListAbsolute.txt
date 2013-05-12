@@ -1,1 +1,10 @@
 D:\Documents\Visual Studio 2012\Projects\VAX_Simulator\VAX_Simulator\bin\Debug\VAX_Simulator.exe.config
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\bin\Debug\VAX_Simulator.exe.config
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\bin\Debug\VAX_Simulator.exe
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\bin\Debug\VAX_Simulator.pdb
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\obj\Debug\VAX_Simulator.csprojResolveAssemblyReference.cache
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\obj\Debug\VAX_Simulator.MainWindow.resources
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\obj\Debug\VAX_Simulator.Properties.Resources.resources
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\obj\Debug\VAX_Simulator.csproj.GenerateResource.Cache
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\obj\Debug\VAX_Simulator.exe
+D:\VisualProjects\VAX_Simulator\VAX_Simulator\obj\Debug\VAX_Simulator.pdb
