@@ -1,0 +1,1 @@
+D:\Documents\Visual Studio 2012\Projects\VAX_Simulator\VAX_Simulator\bin\Debug\VAX_Simulator.exe.config
