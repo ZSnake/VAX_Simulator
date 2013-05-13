@@ -41,30 +41,33 @@ namespace VAX_Simulator
             var result = ofd.ShowDialog();
             _references = new List<Process>();
             if (result == DialogResult.OK)
+            {
                 _bruteReferences = File.ReadAllLines(ofd.FileName);
+                //Lectura de todas las lineas del achivo transformadas a referencias de memoria (para futuros usos)
+                for (int i = 0; i < _bruteReferences.Count(); i++)
+                {
+                    string adress = _bruteReferences[i].Split(' ')[0];
+                    string action = _bruteReferences[i].Split(' ')[1];
+                    _references.Add(new Process(adress, action));
+                }
+
+                if (rdFifo.Checked)
+                    Fifo();
+                if (rdLru.Checked)
+                    LRU();
+                if (rdOpt.Checked)
+                    _algorithm = 3;
+
+                txtOutput.Text = "";
+                txtOutput.AppendText("Page faults: " + page_faults + "\r\n" +
+                                     "Hard Drive Writes: " + hd_writes + "\r\n");
+            }
             else
             {
                 _bruteReferences = new string[0];
             }
 
-            //Lectura de todas las lineas del achivo transformadas a referencias de memoria (para futuros usos)
-            for (int i = 0; i < _bruteReferences.Count(); i++)
-            {
-                string adress = _bruteReferences[i].Split(' ')[0];
-                string action = _bruteReferences[i].Split(' ')[1];
-                _references.Add(new Process(adress, action));
-            }
-
-            if (rdFifo.Checked)
-                Fifo();
-            if (rdLru.Checked)
-                _algorithm = 2;
-            if (rdOpt.Checked)
-                _algorithm = 3;
-
-            txtOutput.Text = "";
-            txtOutput.AppendText("Page faults: " + page_faults + "\r\n" +
-                                 "Hard Drive Writes: " + hd_writes + "\r\n");
+            
         }
 
       
@@ -106,21 +109,37 @@ namespace VAX_Simulator
             {
                 if (_memory.Count() < _numberOfFrames - 1)
                 {
-                    if (Search(_memory, _references[i]) == -1)
+                    
+                    int index = Search(_memory, _references[i]);
+                    if (index == -1)
                     {
                         increaseUse();
                         _memory.Add(_references[i]);
+                        
                     }else
                     {
-
+                        increaseUse();
+                        _memory[index].use = 0;
                     }
                 }
                 else
                 {
-                    if (Search(_memory, _references[i]) == -1)
+                    int index = Search(_memory, _references[i]);
+                    if (index == -1)
                     {
-                        if (_memory[0]._action.Equals("W"))
+                        int lru = getLessRecentUse();
+                       // Console.WriteLine(_memory[lru]._action + "----" + _memory[lru]._adress);
+                        if (_memory[lru]._action.Equals("W"))
                             hd_writes++;
+
+                        _memory.RemoveAt(lru);
+                        _memory.Insert(lru, _references[i]);
+                        increaseUse();
+                        page_faults++;
+                    }else
+                    {
+                        increaseUse();
+                        _memory[index].use = 0;
                     }
                 }
             }
@@ -134,9 +153,14 @@ namespace VAX_Simulator
             }
         }
 
-        public Process getLessRecentUse(List<Process> memory)
+        public int getLessRecentUse()
         {
-            Process lru = null;
+            int lru = 0;
+            for (int i = 1; i < _memory.Count; i++)
+            {
+                if (_memory[i].use > _memory[lru].use)
+                    lru = i;
+            }
             return lru;
         }
 
