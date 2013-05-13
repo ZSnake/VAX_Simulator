@@ -67,30 +67,7 @@ namespace VAX_Simulator
                                  "Hard Drive Writes: " + hd_writes + "\r\n");
         }
 
-        public void Fifow()
-        {
-            hd_writes = 0;
-            page_faults = 0;
-            _memory = new List<Process>();
-            for (int i = 0; i < _references.Count; i++)
-            {
-                if (!Search(_memory, _references[i]))
-                {
-                    if (_memory.Count() < _numberOfFrames - 1)
-                    {
-                        _memory.Add(_references[i]);
-                    }
-                    else
-                    {
-                        if (_memory[0]._action.Equals("W"))
-                            hd_writes++;
-                        _memory.RemoveAt(0);
-                        _memory.Add(_references[i]);
-                    }
-                    page_faults++;
-                }
-            }
-        }
+      
 
         public void Fifo()
         {
@@ -101,14 +78,14 @@ namespace VAX_Simulator
             {
                 if (_memory.Count() < _numberOfFrames - 1)
                 {
-                    if (!Search(_memory, _references[i]))
+                    if (Search(_memory, _references[i]) == -1)
                     {
                         _memory.Add(_references[i]);
                     }
                 }
                 else
                 {
-                    if (!Search(_memory, _references[i]))
+                    if (Search(_memory, _references[i]) == -1)
                     {
                         if (_memory[0]._action.Equals("W"))
                             hd_writes++;
@@ -119,16 +96,59 @@ namespace VAX_Simulator
                 }
             }
          }
-        
 
-        public bool Search(List<Process> memory, Process value)
+        public void LRU()
+        {
+            hd_writes = 0;
+            page_faults = 0;
+            _memory = new List<Process>();
+            for (int i = 0; i < _references.Count; i++)
+            {
+                if (_memory.Count() < _numberOfFrames - 1)
+                {
+                    if (Search(_memory, _references[i]) == -1)
+                    {
+                        increaseUse();
+                        _memory.Add(_references[i]);
+                    }else
+                    {
+
+                    }
+                }
+                else
+                {
+                    if (Search(_memory, _references[i]) == -1)
+                    {
+                        if (_memory[0]._action.Equals("W"))
+                            hd_writes++;
+                    }
+                }
+            }
+        }
+
+        public void increaseUse()
+        {
+            for (int i = 0; i < _memory.Count; i++)
+            {
+                _memory[i].use++;
+            }
+        }
+
+        public Process getLessRecentUse(List<Process> memory)
+        {
+            Process lru = null;
+            return lru;
+        }
+
+
+        public int Search(List<Process> memory, Process value)
         {
             for (int i = 0; i < memory.Count(); i++)
             {
-                if (memory[i].Equals(value))
-                    return true;
+                if (memory[i]._adress.Equals(value._adress))
+                    return i;
             }
-            return false;
+            return -1;
         }
     }
 }
